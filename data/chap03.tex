@@ -1,11 +1,11 @@
 % !TeX root = ../main.tex
 
-\chapter{可配置动态图生成工具}
+\chapter{可配置动态图生成算法与实现}
 \label{cha:chapter03}
 
-此章中将介绍可配置动态图生成工具搭建的相关内容。在第\ref{cha:staticgraph}节与第\ref{cha:Community}节中将进行生成算法的详细介绍，在第\ref{cha:tool_implementation}节中将介绍工具的整体架构与存储方式。
+此章中将对动态图的生成算法进行详细介绍，并且对动态图生成系统中生成模块的实现细节进行讨论。第\ref{cha:staticgraph}节与第\ref{cha:Community}节专注于算法与原理方面，在第\ref{cha:tool_implementation}节中将介绍生成模块整体架构与结果存储方式等内容。
 
-此生成工具的搭建基于第\ref{cha:node_edge_dynamic}节与第\ref{cha:structure_dynamic}节中对图动态性的分析、第\ref{cha:generatorscheme}节展示的图生成工具配置，用户定义的配置信息使用JSON格式传入生成工具中。此工具使用Python实现，其中使用了numpy库进行相关的生成操作。
+生成算法的实现基于第\ref{cha:node_edge_dynamic}节与第\ref{cha:structure_dynamic}节中对图动态性的分析、第\ref{cha:generatorscheme}节展示的动态图生成配置方式，用户定义的配置信息使用JSON格式进行存储与读取。算法实现过程中使用的语言是Python，并且在生成过程中使用了numpy库。
 
 \section{静态图基本生成算法}
 \label{cha:staticgraph}
@@ -19,6 +19,8 @@
 节点度数确定相对比较简单。
 
 在给定出度分布（包含相关参数的概率密度函数$dist_{out}$）与最小度数$d_{min}$、最大度数$d_{max}$之后，可以用公式\ref{equ:DegreeDetermine}计算得到每一个可能的度数对应的概率。
+
+\vspace{-8mm}
 
 \begin{equation}
   \label{equ:DegreeDetermine}
@@ -131,12 +133,16 @@
 
 用公式\ref{equ:NodeInDegreeDetermine}即可确定每一个入度的节点在所有节点中占的比例，进而用累积的方法即可得到在节点排序中的区间。
 
+\vspace{-8mm}
+
 \begin{equation}
   \label{equ:NodeInDegreeDetermine}
   P\left(ind_i=m\right)=\frac{dist_{in}(m)}{\sum\limits_{j=d_{min}}^{d_{max}}dist_{in}(j)}
 \end{equation}
 
 确定一条边的目标节点时，需要按照公式\ref{equ:TargetProb}计算目标节点的入度为$m$的概率。
+
+\vspace{-8mm}
 
 \begin{equation}
   \label{equ:TargetProb}
@@ -258,7 +264,7 @@
 
 接下来，对各种事件的具体实现方式进行简要介绍。
 
-由于事件中需要确定每个事件发生、结束的时刻，因此本节引入了“帧”的概念。一帧代表一个时刻，对应于动态图中保存的一个快照。同时，在生成工具配置时需要记录动态图中涉及到的总帧数（动态图存储的快照数目），以便在后续的生成过程中使用。
+由于事件中需要确定每个事件发生、结束的时刻，因此本节引入了“帧”的概念。一帧代表一个时刻，对应于动态图中保存的一个快照。同时，配置时需要提供动态图中涉及到的总帧数（动态图存储的快照数目，即时间序列的长度），以便在后续的生成过程中使用。
 
 \subsubsection{边的生成}
 
@@ -277,6 +283,8 @@
 在新增节点后需要重新调整节点映射，其中的关键在于原有节点重要性信息的保持。
 
 对于出度分布而言，在不改变原有节点出度的基础上计算新的节点出度即可。但是对于入度分布，需要考虑原有节点在所有节点中相对位置，可以用等比例缩放的方法。具体可以用式\ref{equ:newpos}表示，其中$N_{old}, N_{new}$分别表示新增节点前后的节点总数，$pos, pos_{new}$则分别表示新增节点前后的，某原始节点的位置（数组下标）。
+
+\vspace{-8mm}
 
 \begin{equation}
   \label{equ:newpos}
@@ -324,33 +332,60 @@
 
 \vspace{0.2cm}
 
-\section{工具实现}
+\section{算法实现}
 \label{cha:tool_implementation}
+
+在前两节进行了动态图生成算法的介绍，具体实现时则较为复杂，还考虑整体架构、存储方式等内容，在此节中将会对这些内容进行介绍。
 
 \subsection{整体架构}
 
-可配置动态图生成工具的整体架构如图\ref{fig:structure}所示，主要包括以下几个部分：
+算法实现时的整体架构如图\ref{fig:structure}所示，具体介绍如表\ref{tab:dyn_stru}所示。
 
-\begin{itemize}
-  \item 解析部分：相关配置的输入与解析，进行调度与生成工具的配置与初始化；
-  \item 调度与生成工具部分：接收解析部分得到的配置信息，进行任务安排、相关内容的存储，包含以下部分：
-  \begin{itemize}
-    \item 任务列表生成：将图的生成与各种事件抽象为“任务”这一概念，每一个任务可能由几个步骤组成；
-    \item 行为列表生成：将之前得到的任务进行后续处理，其中对结构影响的基本步骤被称为“行为”（如：修改某个边对应分布的节点映射，修改某个边对应社区的参数）；
-    \item 调度器：维护一个时钟，每一帧都检查该帧需要执行的基本步骤（即上文的“行为”），进行对应函数的调用；
-    \item 结构信息存储：存储在生成过程中需要的各种信息，包括：
-    \begin{itemize}
-      \item 节点标签、数量、属性，事件中被删除、禁用的节点列表等；
-      \item 存储相关的文件句柄、目录管理、已生成边和节点的记录等；
-      \item 边的标签、属性、社区配置、分布配置、节点映射等。
-    \end{itemize}
-  \end{itemize}
-\end{itemize}
+\begin{table}[htb]
+  \centering
+  \caption[动态社交网络图生成整体架构]{动态社交网络图生成整体架构}
+  \label{tab:dyn_stru}
+  \begin{minipage}[t]{1\textwidth}
+    \begin{tabularx}{\linewidth}{llX}
+      \toprule[1.5pt]
+      {\heiti 层级} & {\heiti 名称} & {\heiti 说明} \\
+      \midrule[1pt]
+      解析层 & 配置解析器 & 相关配置的输入与解析 \\\hline
+      调度层 & 调度管理器 & 接收解析部分得到的配置信息，进行任务安排、相关内容的存储 \\\cline{2-3}
+       & 事件列表 & 解析与存储用户定义的各类事件 \\\cline{2-3}
+       & 任务列表 & 将图的生成与各种事件抽象为“任务”这一概念，每一个任务可能由几个步骤组成 \\\cline{2-3}
+       & 行为列表 & 将任务进行后续处理，其中对结构影响的基本步骤被称为“行为”（如：修改某个边对应分布的节点映射，修改某个边对应社区的参数） \\\cline{2-3}
+       & 节点信息 & 节点标签、数量、属性，事件中被删除、禁用的节点列表等 \\\cline{2-3}
+       & 边信息 & 边的标签、属性、社区配置、分布信息、节点映射等 \\\cline{2-3}
+       & 存储信息 & 存储格式、所在目录等 \\\hline
+      生成层 & 事件执行器 & 根据调度器指令，执行各事件（包含生成事件）对应行为，会对社区结构特征进行修改 \\\cline{2-3}
+       & 生成管理器 & 分析事件执行器的结果，将每一帧生成的结果送入存储管理器中保存 \\\cline{2-3}
+       & 存储管理器 & 以指定格式在指定目录存储生成结果 \\
+      \bottomrule[1.5pt]
+    \end{tabularx}
+  \end{minipage}
+\end{table}
+
+% \begin{itemize}
+%   \item 解析部分：相关配置的输入与解析，进行调度与生成工具的配置与初始化；
+%   \item 调度与生成工具部分：接收解析部分得到的配置信息，进行任务安排、相关内容的存储，包含以下部分：
+%   \begin{itemize}
+%     \item 任务列表生成：将图的生成与各种事件抽象为“任务”这一概念，每一个任务可能由几个步骤组成；
+%     \item 行为列表生成：将之前得到的任务进行后续处理，其中对结构影响的基本步骤被称为“行为”（如：修改某个边对应分布的节点映射，修改某个边对应社区的参数）；
+%     \item 调度器：维护一个时钟，每一帧都检查该帧需要执行的基本步骤（即上文的“行为”），进行对应函数的调用；
+%     \item 结构信息存储：存储在生成过程中需要的各种信息，包括：
+%     \begin{itemize}
+%       \item 节点标签、数量、属性，事件中被删除、禁用的节点列表等；
+%       \item 存储相关的文件句柄、目录管理、已生成边和节点的记录等；
+%       \item 边的标签、属性、社区配置、分布配置、节点映射等。
+%     \end{itemize}
+%   \end{itemize}
+% \end{itemize}
 
 \begin{figure}
   \centering
-  \includegraphics[scale=0.6]{structure3.png}
-  \caption{可配置动态图生成工具整体架构}
+  \includegraphics[scale=0.6]{structure_new.png}
+  \caption{动态社交网络图生成整体架构}
   \label{fig:structure}
 \end{figure}
 
@@ -368,6 +403,7 @@
       快照形式$^{*}$ & TSV & 文本格式，每行记录一条边 & \tabincell{l}{0 1\\0 2\\1 2\\2 0} \\\cline{2-4}
        & ADJ & 文本格式，每行记录起始节点与对应的边 & \tabincell{l}{0 1 2\\1 2\\2 0} \\\cline{2-4}
        & CSR & 正向表，第一个文件记录节点后继的位置，第二个文件记录所有后继节点 & \tabincell{l}{第一个文件：0 2 3\\第二个文件：1 2 2 0} \\\cline{2-4}
+       & Neo4j & 在Neo4j数据库中进行存储，以属性形式存储帧数信息，可以限定帧数进行查询 & 略 \\\cline{2-4}
        & node\_link & JSON格式存储、记录每一个节点、每一条边的信息 & \tabincell{l}{\{``directed": True,\\\ \ ``multigraph": False,\\\ \ ``graph": \{\},\\\ \ ``nodes": [\{``id": 0\},\\\ \ \ \ \{``id": 1\}, \{``id": 2\}],\\\ \ ``links": [\\\ \ \ \ \{``source": 0, ``target": 1\},\\\ \ \ \ \{``source": 0, ``target": 2\},\\\ \ \ \ \{``source": 1, ``target": 2\},\\\ \ \ \ \{``source": 2, ``target": 0\}]\}} \\\hline
       增量形式 & DIFF & JSON格式存储增加与删除的边、增加与删除的节点 & \tabincell{l}{\{``nodes\_added": [2],\\\ \ ``nodes\_deleted": [],\\\ \ ``edges\_added": [(0, 2), \\\ \ \ \ (1, 2), (2, 0)],\\\ \ ``edges\_deleted": []\}}\\
       \bottomrule[1.5pt]
@@ -376,8 +412,8 @@
   \end{minipage}
 \end{table}
 
-本节将介绍在可配置动态图生成工具中实现的一部分存储结构，并且用示例加以说明，具体如表\ref{tab:store}所示。
+本节将介绍在生成算法实现时提供的一部分可用存储结构，并且用示例加以说明，具体如表\ref{tab:store}所示。
 
 表\ref{tab:store}中所有列出的格式可以分成快照形式（每一帧的数据单独存储）与增量形式（记录每一帧与之前一帧的区别，以达到节省存储空间的目的）两类，其中增量形式所记录的新增的边、删除的边等内容也可以用与快照形式中相同的方法存储。
 
-除了表\ref{tab:store}中呈现的格式，生成工具中还实现了networkx中支持的GraphML、ADJACENCY、CYTOSCAPE、JIT等格式，并且可以很方便地修改支持其他格式。
+除了表\ref{tab:store}中呈现的格式，还实现了networkx中支持的GraphML、ADJACENCY、CYTOSCAPE、JIT等格式，并且可以很方便地修改支持其他格式。
