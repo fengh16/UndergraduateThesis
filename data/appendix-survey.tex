@@ -603,7 +603,8 @@ needs to be capable of generating graphs where each graph could have
 exponentially many representations, which is distinct from previous
 generative models for images, text, and time series.
 
-As shown in Figure \ref{survey:GraphRNN}, GraphRNN use \(S_i^\pi\) which is a vector of length \(i - 1\) to denote
+% As shown in Figure \ref{survey:GraphRNN}, GraphRNN use \(S_i^\pi\) which is a vector of length \(i - 1\) to denote
+As shown in Figure A-1, GraphRNN use \(S_i^\pi\) which is a vector of length \(i - 1\) to denote
 the adjacency vector which records the adjacency relationship between
 node \(\pi(v_i)\) and nodes
 \(\left(\pi(v_1), \pi(v_2),...,\pi(v_{i-1})\right)\). We need to use
@@ -617,7 +618,7 @@ based on \(S^\pi\).
 \begin{figure}
   \centering
   \includegraphics[scale=0.5]{graphrnn_sequences.png}
-  \caption*{Adjacency Vector in GraphRNN}
+  \caption*{Figure A-1  Adjacency Vector in GraphRNN}
   \label{survey:GraphRNN}
 \end{figure}
 
@@ -767,21 +768,24 @@ so that it can be seen as the "local" gravity and \(\alpha\) as a
 
 \section{Conclusion}
 
+% These methods are from different perspectives, I have extracted the key
+% ideas of the generation of them into Figures \ref{survey:Brief1} and \ref{survey:Brief2}.
+
 These methods are from different perspectives, I have extracted the key
-ideas of the generation of them into Graph \ref{survey:Brief1} and \ref{survey:Brief2}.
+ideas of the generation of them into Figures A-2 and A-3.
 
 \begin{figure}
+  \label{survey:Brief1}
   \centering
   \includegraphics[scale=0.7]{image-20200514153223238.png}
-  \caption*{Key Ideas of S3G2, FastSGG and GraphGNN}
-  \label{survey:Brief1}
+  \caption*{Figure A-2  Key Ideas of S3G2, FastSGG and GraphGNN}
 \end{figure}
 
 \begin{figure}
+  \label{survey:Brief2}
   \centering
   \includegraphics[scale=0.7]{image-20200514153223215.png}
-  \caption*{Key Idea of De2014Dynamic}
-  \label{survey:Brief2}
+  \caption*{Figure A-3  Key Idea of De2014Dynamic}
 \end{figure}
 
 I will do some research in dynamic social graph generation based on

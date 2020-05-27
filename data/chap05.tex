@@ -111,9 +111,7 @@
 
 \subsection{所用时间随图规模的变化}
 
-本节通过对节点数目、分布的最小度数这两项配置信息的修改，观察所用时间与图的整体规模的关系。
-
-本实验的配置与结果如表\ref{tab:exp}所示。
+本节通过对节点数目、分布的最小度数这两项配置信息的修改，观察所用时间与图的整体规模的关系。实验中配置与结果如表\ref{tab:exp}所示。
 
 \begin{table}[htb]
   \centering
@@ -178,6 +176,13 @@
   \end{minipage}
 \end{table}
 
-从表\ref{tab:exp2}中可以看出，所用时间与总帧数有着很大的关联，总耗时随着总帧数增加逐渐增长，速度略慢于线性关系。
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{time_stampnum.png}
+  \caption{用时与帧数的关系}
+  \label{fig:stamps_time}
+\end{figure}
+
+将表中帧数与所用时间两项抽取出来，如图\ref{fig:stamps_time}所示。从表\ref{tab:exp2}和图\ref{fig:stamps_time}中可以看出，所用时间与总帧数有着很大的关联，总耗时随着总帧数增加逐渐增长，速度略慢于线性关系。
 
 更大的总帧数会导致每帧中的保存工作消耗更多的时间，并且总的循环次数增多会导致单次循环产生的边更少，生成效率更低。

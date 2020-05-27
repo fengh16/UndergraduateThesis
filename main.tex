@@ -18,8 +18,8 @@
 % 封面
 \maketitle
 
-% % 使用授权的说明
-% \copyrightpage
+% 使用授权的说明
+\copyrightpage[scan-auth.pdf]
 
 \frontmatter
 \input{data/abstract.tex}
@@ -44,7 +44,7 @@
 % 其它部分
 \backmatter
 
-%% 本科生要求的几个索引。
+% 本科生要求的几个索引。
 \listoffigures    % 插图索引
 \listoftables     % 表格索引
 \listofequations  % 公式索引
@@ -55,22 +55,22 @@
 \bibliographystyle{thuthesis-bachelor}     % 本科生参考文献的著录格式
 \bibliography{ref/refs}
 
-% % 致谢
-% \input{data/acknowledgements}
+% 致谢
+\input{data/acknowledgements}
 
-% % 声明
-% \statement
+% 声明
+\statement[scan-statement.pdf]
 
-% % 附录
-% \appendix
-% \input{data/appendix-survey}       % 本科生：外文资料的调研阅读报告
-% % \input{data/appendix-translation}  % 本科生：外文资料的书面翻译
-% % \input{data/appendix}
+% 附录
+\appendix
+\input{data/appendix-survey}       % 本科生：外文资料的调研阅读报告
+% \input{data/appendix-translation}  % 本科生：外文资料的书面翻译
+% \input{data/appendix}
 
 % % 个人简历
 % \input{data/resume}
 
-% % 本科生的综合论文训练记录表
-% \includepdf[pages=-]{scan-record.pdf}
+% 本科生的综合论文训练记录表
+\includepdf[pages=-]{scan-record.pdf}
 
 \end{document}
