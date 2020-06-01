@@ -3,7 +3,7 @@
 \chapter{动态社交网络图生成管理系统}
 \label{cha:chapter04}
 
-在第\ref{cha:chapter03}章中已经对生成算法与生成模块的具体实现方式进行了介绍，在本章中将设计并构建一个完整的动态社交网络图生成管理系统。
+在第\ref{cha:chapter03}章中已经对生成算法与生成组件的具体实现方式进行了介绍，在本章中将设计并构建一个完整的动态社交网络图生成管理系统。
 
 本系统使用网页配置的形式，可以让用户更方便地进行配置与修改，避免手写JSON等配置文件的不便。系统中使用Vue.js进行前端整个体系的搭建，其中用ElementUI进行美化，用Echarts进行相关可视化的操作；并且使用Django进行后端Restful API的搭建，将第\ref{cha:chapter03}章中实现的可配置动态社交网络图生成算法作为其中的一个组件接入，以便用户方便、直观地进行系统的使用。
 
@@ -43,7 +43,7 @@
   \label{fig:frontend-home}
 \end{figure}
 
-在配置选择页面，用户可以用交互式操作进行每一个选项的详细配置。如图\ref{fig:iterations_node}、\ref{fig:edge_comm_event}所示。
+在配置选择页面，用户可以用交互式操作进行每一个选项的详细配置。如图\ref{fig:iterations_node}、\ref{fig:edge_comm_event}所示。同时，也可以用JSON格式或者语句格式进行配置信息的导入。
 
 \begin{figure}[H]
   \centering
@@ -113,3 +113,7 @@
   \caption{动态图分析与可视化流程图}
   \label{fig:uml_analyze}
 \end{figure}
+
+\section{本章小结}
+
+本章对动态社交网络图生成管理系统的整体架构与执行流程进行了介绍。此系统中使用前后端分离的Restful架构设计，使用了第\ref{cha:chapter03}章中实现的动态社交网络图生成组件，用户可以方便地使用网页客户端进行配置选择、生成、历史记录查看与分析可视化等操作，极大地方便了用户的使用。
