@@ -39,13 +39,13 @@
 \begin{figure}
 \begin{minipage}{0.48\textwidth}
   \centering
-  \includegraphics[scale=0.3]{out_degree_exp1.png}
+  \includegraphics[scale=0.6]{out_degree_exp1.png}
   \caption{生成结果出度分布}
   \label{fig:parallel1}
 \end{minipage}\hfill
 \begin{minipage}{0.48\textwidth}
   \centering
-  \includegraphics[scale=0.3]{in_degree_exp1.png}
+  \includegraphics[scale=0.6]{in_degree_exp1.png}
   \caption{生成结果入度分布}
   \label{fig:parallel2}
 \end{minipage}
@@ -55,13 +55,9 @@
 
 对于入度分布而言，总体来看的确符合Power-Law分布，但与给定的条件并不完全相符，出现了一些超出配置时规定的度数范围（$[1, 100]$）的节点。这是因为入度分布的信息只是提供了每个目标节点被选中概率的大小，由于入度分布与出度分布可能不相吻合，因此不能保证结果的入度分布完全符合给定要求。
 
-接下来检验单个节点的度数变化。为了避免度数极小的点对分析造成干扰，在后续实验中将度数范围设置为$[30, 100]$。
-
-从第三帧的重要度变化事件影响的节点中取出两个节点的度数变化数据，如图\ref{fig:important_eg1}与图\ref{fig:important_eg2}所示，节点1514和节点326是节点重要度变化事件中受到影响的节点，其重要性分别在第3帧时得到提升与降低。
-
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.6]{important_eg1.png}
+  \includegraphics[scale=0.4]{important_eg1.png}
   \caption{节点重要度提升—以节点1514为例}
   \label{fig:important_eg1}
 \end{figure}
@@ -72,6 +68,10 @@
   \caption{节点重要度降低—以节点326为例}
   \label{fig:important_eg2}
 \end{figure}
+
+接下来检验单个节点的度数变化。为了避免度数极小的点对分析造成干扰，在后续实验中将度数范围设置为$[30, 100]$。
+
+从第三帧的重要度变化事件影响的节点中取出两个节点的度数变化数据，如图\ref{fig:important_eg1}与图\ref{fig:important_eg2}所示，节点1514和节点326是节点重要度变化事件中受到影响的节点，其重要性分别在第3帧时得到提升与降低。
 
 第5-7帧中的突发事件模拟代表着某些节点度数增长速度的临时加快。如图\ref{fig:sudden_event_eg}所示，节点1866在该事件中受到影响，第5-7帧中度数增长速度明显加快。
 
@@ -176,16 +176,16 @@
   \end{minipage}
 \end{table}
 
+将表中帧数与所用时间两项抽取出来，如图\ref{fig:stamps_time}所示。从表\ref{tab:exp2}和图\ref{fig:stamps_time}中可以看出，所用时间与总帧数有着很大的关联，总耗时随着总帧数增加逐渐增长，速度略慢于线性关系。
+
+更大的总帧数会导致每帧中的保存工作消耗更多的时间，并且总的循环次数增多会导致单次循环产生的边更少，生成效率更低。
+
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.5]{time_stampnum.png}
   \caption{用时与帧数的关系}
   \label{fig:stamps_time}
 \end{figure}
-
-将表中帧数与所用时间两项抽取出来，如图\ref{fig:stamps_time}所示。从表\ref{tab:exp2}和图\ref{fig:stamps_time}中可以看出，所用时间与总帧数有着很大的关联，总耗时随着总帧数增加逐渐增长，速度略慢于线性关系。
-
-更大的总帧数会导致每帧中的保存工作消耗更多的时间，并且总的循环次数增多会导致单次循环产生的边更少，生成效率更低。
 
 \section{本章小结}
 

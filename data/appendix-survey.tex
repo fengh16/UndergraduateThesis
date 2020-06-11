@@ -55,9 +55,9 @@ Here are two of this kind of method, S3G2 and FastSGG.
 
 \subsection{S3G2\cite{Minh2012S3G2}}
 
-"S3G2" is short for "Scalable Structure-correlated Social Graph
-Generator", it is a generator that can produce scalable a social network
-graph which is structure-correlated. So-called "structure-correlated" is
+“S3G2” is short for “Scalable Structure-correlated Social Graph
+Generator”, it is a generator that can produce scalable a social network
+graph which is structure-correlated. So-called “structure-correlated” is
 not the attributes of a single node or the community-structure we
 usually talk about, it mainly focuses on the way nodes happen to be
 connected, which is the edges of the graph based on the nodes'
@@ -675,7 +675,7 @@ There are two essential benefits:
   predictions we need to make in the edge-level RNN; in particular, when
   we are adding a new node under a BFS ordering, the only possible edges
   for this new node are those connecting to nodes that are in the
-  "frontier" of the BFS (\emph{i.e.}, nodes that are still in the BFS
+  “frontier” of the BFS (\emph{i.e.}, nodes that are still in the BFS
   queue). In other words, if we find
   \((v_i, v_{j-1})\in E, (v_i, v_{j})\notin E, i < j \le n\), we can say
   that there are no edges between \(v_{\le i}\) and \(v_{>j}\).
@@ -705,7 +705,7 @@ agent interaction behavior. The details are as follows:
 local agent interactions\cite{De2014Dynamic}}
 
 The basic idea of the model is that a network is created by collisions
-between \textbf{agents} that are in "social space''. This way of
+between \textbf{agents} that are in “social space”. This way of
 creating networks can represent many social interactions, such as
 real-world person-to-person meetings and on-line meetings though social
 media.
@@ -715,7 +715,7 @@ parameters of the agent's movement, such as the distance it can travel.
 
 \subsubsection{Introduction to the Model}
 
-So-called "social space" is a 2-dimensional space and the Euclidean
+So-called “social space” is a 2-dimensional space and the Euclidean
 distance between any two objects will represent a social distance.
 
 Numer of agents is fixed and agent particles are distributed randomly,
@@ -725,7 +725,7 @@ position and represents the point to which the agent will return after a
 journey. A random angle of travel and a random range will be assigned to
 each of the agents, and the range is get from a function
 \(\text{agent range} =-\ln \left(\frac{x}{\lambda\left(1+\mu w_{s}\right)}\right), x\in [0,1]\).
-\(w_s\) means the number of direct contacts or "neighbors",
+\(w_s\) means the number of direct contacts or “neighbors”,
 \(\lambda, \mu\) are fixed parameters and \(x\) is the random number
 chosen to generate a range for an agent. So that we can get the target
 point of the agent using the angle and the range.
@@ -752,7 +752,7 @@ There are three stages of the movement:
 
 \vspace{0.2cm}
 
-So-called "collision" means that two agents pass within a radius width
+So-called “collision” means that two agents pass within a radius width
 of each other. This will lead to the formation of the two agent nodes.
 
 Home position of an agent \(r\) will be changed according to the
@@ -762,9 +762,9 @@ Here \(\boldsymbol{v}_{\boldsymbol{r s}}\) is the vector from \(h_r\) to
 \(h_s\); \(h_r, h_s\) are the original home of the two agents of the
 collision; and \(w_r\) is the number of neighbors of \(r\).
 \(\alpha, \beta\) are the parameters of the system which can be seen as
-a "gravity" factor. \(\beta\) is multiplied to the number of neighbors
-so that it can be seen as the "local" gravity and \(\alpha\) as a
-"global" gravity.
+a “gravity” factor. \(\beta\) is multiplied to the number of neighbors
+so that it can be seen as the “local” gravity and \(\alpha\) as a
+“global” gravity.
 
 \section{Conclusion}
 
